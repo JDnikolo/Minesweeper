@@ -6,11 +6,17 @@ import java.util.Scanner;
 import customExceptions.*;
 
 public class scenario {
-    private byte diff;
-    private int mines;
-    private int time;
-    private boolean uber;
+    public byte diff;
+    public int mines;
+    public int time;
+    public boolean uber;
 
+    public scenario(scenario sc){
+        diff=sc.diff;
+        mines=sc.mines;
+        time=sc.time;
+        uber=sc.uber;
+    }
     public scenario(){
         this.diff=1;
         this.mines=9;
