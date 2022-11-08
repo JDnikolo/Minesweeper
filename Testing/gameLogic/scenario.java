@@ -1,3 +1,5 @@
+package gameLogic;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.InputMismatchException;
@@ -43,9 +45,9 @@ public class scenario {
             t = sc.nextInt();
             u = sc.nextInt();
         } catch (InputMismatchException e){
-            throw new InvalidDescriptionException("Invalid scenario description in file \""+filename+"\"",e);
+            throw new InvalidDescriptionException("Invalid gameLogic.scenario description in file \""+filename+"\"",e);
         } catch (NoSuchElementException e){
-            throw new InvalidDescriptionException("Invalid scenario description in file \""+filename+"\"",e);
+            throw new InvalidDescriptionException("Invalid gameLogic.scenario description in file \""+filename+"\"",e);
         }
         if (d!=1 && d!=2){
             throw new InvalidValueException(filename+": invalid difficulty.");
@@ -70,7 +72,7 @@ public class scenario {
     }
     public static void main(String[] args){
         if (args.length!=1){
-            System.out.println("Usage: scenario <filename>");
+            System.out.println("Usage: gameLogic.scenario <filename>");
             return;
         }
         String filename=args[0];
