@@ -116,7 +116,7 @@ class Board{
         for(int i=0;i<script.mines;i++){
             l=Arrays.asList(mines);
             do {
-                m= Mine.randomMine(boardSize, false);
+                m= Mine.randomMine(boardSize);
             }while(l.contains(m));
             mines[i]=m;
             mineBoard[m.x][m.y]=1;
@@ -229,7 +229,7 @@ class Board{
             output.append('\n').append(sep).append('\n');
         }
         start.append('\n').append(sep).append('\n');
-        return start.append(output.toString()).toString();
+        return start.append(output).toString();
     }
     String printMines(){
         StringBuilder output= new StringBuilder();
@@ -263,17 +263,12 @@ class Mine{
     void makeUber(){
         isUber=true;
     }
-    static Mine randomMine(int tableSize, boolean uber){
-        Mine m=randomMine(tableSize);
-        m.isUber=uber;
-        return m;
-    }
     static Mine randomMine(int tableSize){
        Mine m = new Mine();
        Random gen = new Random();
-       m.x=gen.nextInt(0,tableSize-1);
-       m.y=gen.nextInt(0,tableSize-1);
-       m.isUber=gen.nextBoolean();
+       m.x=gen.nextInt(0, tableSize);
+       m.y=gen.nextInt(0, tableSize);
+       m.isUber=false;
        return m;
     }
 }
