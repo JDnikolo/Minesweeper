@@ -147,7 +147,7 @@ class Board{
             for (int j = y - 1; j < y + 2; j++) {
                 if (i == x && j == y) continue;
                 //System.out.println("---Checking: "+i+" "+j);
-                if (i > -1 && i < boardSize - 1 && j > -1 && j < boardSize - 1) {
+                if (i > -1 && i < boardSize && j > -1 && j < boardSize) {
                     nearMines += mineBoard[i][j];
                 }
             }
