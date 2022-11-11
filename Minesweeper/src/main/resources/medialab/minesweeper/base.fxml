@@ -44,14 +44,15 @@
 
 <VBox prefHeight="468.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="medialab.minesweeper.MainPageController">
+      fx:controller="medialab.minesweeper.MainPageController"
+fx:id="main">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="Application">
           <items>
             <MenuItem mnemonicParsing="false" text="Create" onAction="#onCreateClick"/>
-            <MenuItem mnemonicParsing="false" text="Load" />
+            <MenuItem mnemonicParsing="false" text="Load" onAction="#onLoadClick"/>
             <MenuItem mnemonicParsing="false" text="Start" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Exit" />
@@ -77,7 +78,7 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                        <children>
-                                          <TextField layoutX="54.0" layoutY="7.0" prefHeight="26.0" prefWidth="85.0" text="MinesLeft" />
+                                          <TextField layoutX="54.0" layoutY="7.0" prefHeight="26.0" prefWidth="85.0" text="MinesLeft"/>
                                           <TextField layoutX="201.0" layoutY="7.0" prefHeight="26.0" prefWidth="85.0" text="FlagsLeft" />
                                           <ImageView fitHeight="34.0" fitWidth="38.0" layoutX="13.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
                                           <ImageView fitHeight="34.0" fitWidth="38.0" layoutX="154.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />

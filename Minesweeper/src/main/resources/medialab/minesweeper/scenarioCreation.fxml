@@ -37,7 +37,7 @@
     <SplitPane prefHeight="160.0" prefWidth="200.0" GridPane.rowIndex="3">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <HBox alignment="CENTER" layoutX="-2.0" layoutY="-1.0" prefHeight="31.0" prefWidth="369.0" spacing="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <RadioButton fx:id="diffButton1" mnemonicParsing="false" selected="true" text="1">
+                <RadioButton fx:id="diffButton1" mnemonicParsing="false" selected="true" text="1" onAction="#setPrompts">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -45,7 +45,7 @@
                         <ToggleGroup fx:id="diff" />
                     </toggleGroup>
                 </RadioButton>
-                <RadioButton fx:id="diffButton2" mnemonicParsing="false" prefWidth="39.0" text="2">
+                <RadioButton fx:id="diffButton2" mnemonicParsing="false" prefWidth="39.0" text="2" onAction="#setPrompts">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -66,12 +66,12 @@
           <Font size="20.0" />
         </font>
     </Label>
-    <Label alignment="CENTER" text="Time Limit" GridPane.rowIndex="7">
+    <Label alignment="CENTER" text="Time Limit (in seconds)" GridPane.rowIndex="7">
         <font>
           <Font size="20.0" />
         </font>
     </Label>
-    <TextField fx:id="mineField" alignment="CENTER" GridPane.rowIndex="5">
+    <TextField fx:id="mineField" alignment="CENTER" GridPane.rowIndex="5" promptText="9-11">
         <opaqueInsets>
           <Insets />
         </opaqueInsets>
@@ -79,7 +79,7 @@
           <Insets left="50.0" right="50.0" />
         </GridPane.margin>
     </TextField>
-    <TextField fx:id="timeField" alignment="CENTER" GridPane.rowIndex="8">
+    <TextField fx:id="timeField" alignment="CENTER" GridPane.rowIndex="8" promptText="120-180">
         <GridPane.margin>
           <Insets left="50.0" right="50.0" />
         </GridPane.margin>
@@ -89,7 +89,7 @@
           <Font size="20.0" />
         </font>
     </Label>
-    <TextField fx:id="nameField" alignment="CENTER" GridPane.rowIndex="1">A Cool Scenario
+    <TextField fx:id="nameField" alignment="CENTER" GridPane.rowIndex="1">Scenario-00
         <GridPane.margin>
           <Insets left="50.0" right="50.0" />
         </GridPane.margin>

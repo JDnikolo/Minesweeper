@@ -16,6 +16,7 @@ import medialab.minesweeper.gameLogic.scenario;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class CreateScenarioController {
     @FXML
@@ -26,7 +27,24 @@ public class CreateScenarioController {
     CheckBox uberBox;
 
     @FXML
-    protected void resetFields(){}
+    public void setPrompts(ActionEvent actionEvent) {
+        if (actionEvent.getSource()==diffButton1){
+            timeField.setPromptText("120-180");
+            mineField.setPromptText("9-11");
+            uberBox.setSelected(false);
+        }
+        if (actionEvent.getSource()==diffButton2){
+            timeField.setPromptText("240-360");
+            mineField.setPromptText("35-45");
+            uberBox.setSelected(true);
+        }
+    }
+    @FXML
+    protected void resetFields(){
+        nameField.setText("Scenario-"+(new Random().nextInt(0,999999)));
+        timeField.setText("");
+        mineField.setText("");
+    }
     @FXML
     protected void createScenario(){
         boolean failed=false;
@@ -61,15 +79,16 @@ public class CreateScenarioController {
                 break;
             }
             case 2:{
-                if (mines > 35 || mines < 45) {
+                if (mines < 35 || mines > 45) {
                     mineField.setStyle(errorStyle);
                     failed = true;
                 }
-                if (seconds > 240 || seconds < 360) {
+                if (seconds < 240 || seconds > 360) {
                     timeField.setStyle(errorStyle);
                     failed = true;
                 }
                 uber=uberBox.isSelected();
+                break;
             }
         }
         if (scenarioName==""){
@@ -94,4 +113,5 @@ public class CreateScenarioController {
             }
         }
     }
+
 }

@@ -64,10 +64,6 @@ public class scenario {
 
             if (u!=1) throw new InvalidValueException(filename+": invalid mine amount.");
     }
-        System.out.println("Difficulty: "+d);
-        System.out.println("Mines:      "+m);
-        System.out.println("Time:       "+t);
-        System.out.println("Uber-mine:  "+(u==1));
         return new scenario(d,m,t,u==1);
     }
     public String toFileFormat(){
