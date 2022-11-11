@@ -9,7 +9,7 @@ import medialab.minesweeper.gameLogic.scenario;
 
 import java.io.IOException;
 
-public class HelloController {
+public class MainPageController {
     @FXML
     private Label welcomeText;
     private scenario loadedScenario;
@@ -21,7 +21,7 @@ public class HelloController {
     @FXML
     protected void onCreateClick() throws IOException {
         Stage scenarioStage = new Stage();
-        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("scenarioCreation.fxml"));
+        FXMLLoader loader = new FXMLLoader(MinesweeperApp.class.getResource("scenarioCreation.fxml"));
         Scene scene = new Scene(loader.load(),320,320);
         scenarioStage.setTitle("Create a scenario");
         scenarioStage.setScene(scene);

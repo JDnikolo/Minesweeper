@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>medialab.minesweeper/medialab.minesweeper.HelloApplication</mainClass>
+                            <mainClass>medialab.minesweeper/medialab.minesweeper.MinesweeperApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
