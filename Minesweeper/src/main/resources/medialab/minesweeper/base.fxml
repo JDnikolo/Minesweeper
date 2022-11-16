@@ -32,28 +32,28 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="468.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="medialab.minesweeper.MainPageController"
-fx:id="main">
+<VBox fx:id="main" alignment="CENTER" maxHeight="580.0" maxWidth="500.0" minHeight="580.0" minWidth="500.0" prefHeight="580.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="medialab.minesweeper.MainPageController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="Application">
           <items>
-            <MenuItem mnemonicParsing="false" text="Create" onAction="#onCreateClick"/>
-            <MenuItem mnemonicParsing="false" text="Load" onAction="#onLoadClick"/>
-            <MenuItem mnemonicParsing="false" text="Start" />
+            <MenuItem mnemonicParsing="false" onAction="#onCreateClick" text="Create" />
+            <MenuItem mnemonicParsing="false" onAction="#onLoadClick" text="Load" />
+            <MenuItem mnemonicParsing="false" onAction="#onClickStart" text="Start" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Exit" />
           </items>
@@ -64,39 +64,37 @@ fx:id="main">
                   <MenuItem mnemonicParsing="false" text="Solution" />
                </items>
         </Menu>
+          <Menu fx:id="scenarioThingy" disable="true" mnemonicParsing="false" text="No scenario loaded.">
+          </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="535.0" prefWidth="555.0" VBox.vgrow="ALWAYS">
       <children>
-            <VBox alignment="CENTER" layoutY="-1.0" prefHeight="447.0" prefWidth="640.0">
+            <VBox fx:id="container" alignment="CENTER" layoutY="-1.0" prefHeight="555.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <SplitPane dividerPositions="0.1" orientation="VERTICAL" prefHeight="448.0" prefWidth="640.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="117.0" prefWidth="638.0">
+                  <Pane fx:id="statusPane" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="500.0" prefHeight="50.0" prefWidth="500.0" VBox.vgrow="NEVER">
+                     <children>
+                        <HBox alignment="CENTER" fillHeight="false" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="500.0" prefHeight="50.0" prefWidth="500.0" spacing="10.0">
                            <children>
-                              <SplitPane dividerPositions="0.5007836990595611" layoutX="-1.0" prefHeight="42.0" prefWidth="640.0">
-                                <items>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                                       <children>
-                                          <TextField layoutX="54.0" layoutY="7.0" prefHeight="26.0" prefWidth="85.0" text="MinesLeft"/>
-                                          <TextField layoutX="201.0" layoutY="7.0" prefHeight="26.0" prefWidth="85.0" text="FlagsLeft" />
-                                          <ImageView fitHeight="34.0" fitWidth="38.0" layoutX="13.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
-                                          <ImageView fitHeight="34.0" fitWidth="38.0" layoutX="154.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
-                                       </children>
-                                    </AnchorPane>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="315.0">
-                                       <children>
-                                          <TextField layoutX="70.0" layoutY="9.0" prefHeight="26.0" prefWidth="231.0" text="Time Left" />
-                                          <ImageView fitHeight="34.0" fitWidth="38.0" layoutX="14.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
-                                       </children>
-                                    </AnchorPane>
-                                </items>
-                              </SplitPane>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Mines" />
+                              <Text fx:id="mineDisplay" strokeType="OUTSIDE" strokeWidth="0.0" text="---" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Flags Left" />
+                              <Text fx:id="flagDisplay" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time Left" />
+                              <Text fx:id="timeDisplay" strokeType="OUTSIDE" strokeWidth="0.0" text="---" />
                            </children>
-                        </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="422.0" prefWidth="638.0" />
-                    </items>
-                  </SplitPane>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="minePane" maxHeight="500.0" maxWidth="500.0" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" />
                </children>
             </VBox>
       </children>

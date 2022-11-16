@@ -18,14 +18,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class LoadScenarioController {
-    scenario loadedScenario;
+    public scenario loadedScenario;
+    public String scenarioName;
     @FXML
     TextField scenarioField;
     @FXML
-    CheckBox onSuccessClose, onSuccessStart;
+    CheckBox onSuccessClose;
     @FXML
     Text messageText;
-
+    public void setLoadedScenario(scenario sc){
+        this.loadedScenario=sc;
+    }
     @FXML
     protected void findScenario() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("base.fxml"));
@@ -49,18 +52,13 @@ public class LoadScenarioController {
             messageText.setText("The file's values are incorrect.");
             return;
         }
+        scenarioName = filename;
         loadedScenario=toLoad;
         messageText.setText("Loaded "+filename+" successfully.");
-        controller.setScenario(loadedScenario);
-        if (onSuccessStart.isSelected()){
-            Stage stage = (Stage) onSuccessStart.getScene().getWindow();
-            stage.setOnCloseRequest(event ->{
-                stage.close();
-            });
-        }
+        controller.setScenario(filename);
         if (onSuccessClose.isSelected()){
             Stage stage = (Stage) onSuccessClose.getScene().getWindow();
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
             delay.setOnFinished( event -> stage.close() );
             delay.play();
         }

@@ -19,7 +19,6 @@
       </Text>
       <TextField fx:id="scenarioField" alignment="CENTER" text="SCENARIO-01" />
       <CheckBox fx:id="onSuccessClose" mnemonicParsing="false" text="Close this window on success" />
-      <CheckBox fx:id="onSuccessStart" mnemonicParsing="false" text="Start game on success" />
       <Button fx:id="loadButton" mnemonicParsing="false" onAction="#findScenario" text="Load">
          <font>
             <Font size="14.0" />

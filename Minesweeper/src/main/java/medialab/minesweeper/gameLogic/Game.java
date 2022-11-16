@@ -11,8 +11,8 @@ import java.util.*;
 public class Game {
     static public scenario script;
     public Board gameBoard;
-    int timeLeft;
-    int flagsLeft;
+    public int timeLeft;    //todo create getters instead?
+    public int flagsLeft;
     int tries;
     Instant gameStartTime;
     boolean hasEnded;
@@ -190,7 +190,6 @@ class Board{
         }
     }
     private void uberReveal(int x, int y) {
-    //TODO implement this
         if (mineBoard[x][y]==1){
             revealedBoard[x][y]='N'; //neutralized mine
             return;
