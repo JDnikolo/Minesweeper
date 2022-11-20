@@ -18,6 +18,14 @@ public class Game {
     boolean hasEnded;
     boolean wasWon;
 
+    public String getStatus(){
+        if (hasEnded){
+            if (wasWon) return "win";
+            else return "loss";
+        }
+        else return "running";
+    }
+
     public Game(scenario sc){
         script=new scenario(sc);
         flagsLeft=script.mines;
@@ -99,6 +107,10 @@ public class Game {
             System.out.println(g.gameBoard.printBoard());
         }
     }
+
+    public char getBoardChar(int x, int y) {
+        return gameBoard.revealedBoard[x][y];
+    }
 }
 class Board{
     int[][] mineBoard;
@@ -107,6 +119,7 @@ class Board{
     int revealedTiles;
     final int totalTiles;
     Mine[] mines;
+
     public Board(scenario script){
         Mine m;
         List l;
@@ -175,6 +188,7 @@ class Board{
         if (y<0 || y>boardSize-1) return;
         if (revealedBoard[x][y]=='F') {
             revealedBoard[x][y] = '\u0000';
+            return;
         }
         if (revealedBoard[x][y]!='\u0000') return; //nothing to do
         revealedBoard[x][y]='F';

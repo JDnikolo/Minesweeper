@@ -1,39 +1,31 @@
 package medialab.minesweeper;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import medialab.minesweeper.gameLogic.Game;
 import medialab.minesweeper.gameLogic.scenario;
-
 import java.io.IOException;
-import java.util.EventListener;
 
 public class MainPageController {
+    private StackPane[][] panes;
     @FXML
     private Pane minePane;
     @FXML
-    private Text welcomeText,timeDisplay,flagDisplay,mineDisplay;
+    private Text timeDisplay,flagDisplay,mineDisplay;
     private scenario loadedScenario;
-    @FXML
-    private VBox container;
     @FXML
     private Menu scenarioThingy;
     private Game game;
@@ -73,18 +65,26 @@ public class MainPageController {
         }
         game= new Game(loadedScenario);
         int size = loadedScenario.diff==1 ? 9:16;
+        panes = new StackPane[size][size];
         GridPane field = new GridPane();
         field.setAlignment(Pos.CENTER);
         for (int i=0;i<size;i++){
             for (int j=0;j<size;j++){
                 //todo configure rectangles to reveal/flag
-                Rectangle R = new Rectangle(500/size,500/size, Color.valueOf("grey"));
                 int finalI = i;
                 int finalJ = j;
+                StackPane R = new StackPane();
+                R.setAlignment(Pos.CENTER);
+                R.setBackground(new Background(new BackgroundFill(Color.valueOf("grey"), CornerRadii.EMPTY, Insets.EMPTY)));
+                R.setMinSize(500.0/size,500.0/size);
+                R.setMaxSize(500.0/size,500.0/size);
                 R.setOnMouseClicked(event -> {
-                    squareClick(event, finalI, finalJ);
+                    squareClick(event, finalI, finalJ,size);
                 });
                 field.add(R,j,i);
+                Text content = new Text(" ");
+                R.getChildren().add(content);
+                panes[i][j]=R;
             }
         }
         field.setGridLinesVisible(true);
@@ -94,14 +94,35 @@ public class MainPageController {
         timeDisplay.setText((Integer.toString(game.timeLeft)));
         game.start();
     }
-    EventHandler<MouseEvent> squareClick(MouseEvent click,int x, int y) {
-        if (click.getButton()==MouseButton.PRIMARY) {
-            System.out.println("Revealing "+x+" "+y);
-            //todo reveal
-        } else {
-            //todo flag
-            System.out.println("Flagging "+x+" "+y);
+    EventHandler<MouseEvent> squareClick(MouseEvent click,int x, int y,int size) {
+        String status = game.getStatus();
+        if (status == "running") {
+            if (click.getButton() == MouseButton.PRIMARY) {
+                System.out.println("Revealing " + x + " " + y);
+                game.reveal(x, y);
+            } else {
+                //todo flag
+                System.out.println("Flagging " + x + " " + y);
+                game.flag(x, y);
+            }
+            refreshField(size);
+            status = game.getStatus();
+            if (status != "running"){
+                //TODO handle game end
+            }
         }
         return null;
+    }
+    void refreshField(int size){
+        for (int i=0;i<size;i++){
+            for (int j=0;j<size;j++){
+                Text content = (Text)panes[i][j].getChildren().get(0);
+                char toPut = game.getBoardChar(i,j);
+                content.setText(""+toPut);
+                if (toPut!='\u0000'&& toPut!='F'){
+                    panes[i][j].setBackground(new Background(new BackgroundFill(Color.valueOf("white"), CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+        }
     }
 }
