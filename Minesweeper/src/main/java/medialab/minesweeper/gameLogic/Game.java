@@ -14,9 +14,9 @@ public class Game {
     public int timeLeft;    //todo create getters instead?
     public int flagsLeft;
     int tries;
-    Instant gameStartTime;
-    boolean hasEnded;
-    boolean wasWon;
+    Instant gameStartTime,gameEndTime;
+    private boolean hasEnded;
+    private boolean wasWon;
 
     public String getStatus(){
         if (hasEnded){
@@ -53,22 +53,34 @@ public class Game {
     public void reveal(int x, int y){
         Instant currentTime = Instant.now();
         if (Duration.between(gameStartTime,currentTime).toSeconds()>=timeLeft){
-            this.hasEnded=true;
+            hasEnded=true;
+            gameEndTime=Instant.now();
             return;
         }
         boolean noBoom=gameBoard.reveal(x,y,false);
         if (noBoom) {
             tries += 1;
-            if(gameBoard.revealedTiles == gameBoard.totalTiles-script.mines){
+            if(gameBoard.revealedTiles >= gameBoard.totalTiles-script.mines){
                 hasEnded=true;
                 wasWon=true;
+                gameEndTime=Instant.now();
+                gameBoard.endgameReveal();
             }
         }else{
             hasEnded=true;
+            gameEndTime=Instant.now();
+            gameBoard.endgameReveal();
         }
     }
     public void flag(int x, int y){
-        gameBoard.flag(x,y,this.tries);
+        boolean removeOnly;
+        flagsLeft= gameBoard.mines.length-gameBoard.flagsPlaced;
+        if (flagsLeft>0){
+            removeOnly=false;
+        } else removeOnly=true;
+        gameBoard.flag(x,y,this.tries,removeOnly);
+        flagsLeft= gameBoard.mines.length-gameBoard.flagsPlaced;
+
     }
 
     public static void main(String[] args) {
@@ -119,31 +131,43 @@ class Board{
     int revealedTiles;
     final int totalTiles;
     Mine[] mines;
+    int flagsPlaced;
 
     public Board(scenario script){
         Mine m;
-        List l;
         if (script.diff==1) boardSize=9;
         else boardSize=16;
         mineBoard=new int[boardSize][boardSize];
         revealedBoard = new char[boardSize][boardSize];
         revealedTiles = 0;
         totalTiles=boardSize*boardSize;
+        flagsPlaced=0;
         mines = new Mine[script.mines];
         for(int i=0;i<script.mines;i++){
-            l=Arrays.asList(mines);
             do {
                 m= Mine.randomMine(boardSize);
-            }while(l.contains(m));
+            }while(mineBoard[m.x][m.y]==1);
             mines[i]=m;
             mineBoard[m.x][m.y]=1;
+            //System.out.println(m.x+" "+m.y);
         }
         if (script.uber){
             int pick=new Random().nextInt(0, mines.length);
             mines[pick].makeUber();
+            System.out.println(mines[pick].x+" "+mines[pick].y);
         }
     }
 
+    public void endgameReveal(){
+        int x,y;
+        for (Mine m :mines){
+            x=m.x;
+            y=m.y;
+            if (revealedBoard[x][y]!='T'&& revealedBoard[x][y]!='F'){
+                revealedBoard[x][y]='M';
+            }
+        }
+    }
     //Returns false on mine reveal, true otherwise.
     public boolean reveal(int x, int y,boolean safe){
         if (x<0 || x>boardSize-1) return true;
@@ -151,7 +175,8 @@ class Board{
         //System.out.println("Revealing: "+x+" "+y);
         if (mineBoard[x][y]==1) {
             if (!safe){
-                System.out.println("BOOM!");
+                //System.out.println("BOOM!");
+                revealedBoard[x][y]='T';
             }
             return false;
         }
@@ -181,17 +206,21 @@ class Board{
             revealedBoard[x][y]= (char) (nearMines+'0');
         }
         revealedTiles+=1;
+        //System.out.println(x+" "+y+" "+revealedTiles+" "+totalTiles);
         return true;
     }
-    public void flag(int x, int y,int tries){
+    //returns true if a flag was removed
+    public void flag(int x, int y,int tries,boolean removeOnly){
         if (x<0 || x>boardSize-1) return;
         if (y<0 || y>boardSize-1) return;
         if (revealedBoard[x][y]=='F') {
             revealedBoard[x][y] = '\u0000';
+            flagsPlaced-=1;
             return;
         }
-        if (revealedBoard[x][y]!='\u0000') return; //nothing to do
+        if (revealedBoard[x][y]!='\u0000' || removeOnly) return; //nothing to do
         revealedBoard[x][y]='F';
+        flagsPlaced+=1;
         if (mineBoard[x][y]==1){
             for (Mine m:mines){
                 if(x==m.x && y==m.x && m.isUber && tries<=4){
