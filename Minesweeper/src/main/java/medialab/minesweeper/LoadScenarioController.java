@@ -34,7 +34,8 @@ public class LoadScenarioController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("base.fxml"));
         Parent root = (Parent)loader.load();
         MainPageController controller = (MainPageController) loader.getController();
-        String filename=scenarioField.getText()+".txt";
+        String filename=scenarioField.getText();
+        if (!filename.endsWith(".txt")) filename+=".txt";
         scenario toLoad;
         if (filename.length()==0){
             messageText.setText("The filename cannot be empty!");

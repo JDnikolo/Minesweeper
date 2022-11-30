@@ -51,17 +51,17 @@
       <menus>
         <Menu mnemonicParsing="false" text="Application">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#onCreateClick" text="Create" />
-            <MenuItem mnemonicParsing="false" onAction="#onLoadClick" text="Load" />
+            <MenuItem mnemonicParsing="false" onAction="#onClickCreate" text="Create" />
+            <MenuItem mnemonicParsing="false" onAction="#onClickLoad" text="Load" />
             <MenuItem mnemonicParsing="false" onAction="#onClickStart" text="Start" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Exit" />
+            <MenuItem mnemonicParsing="false" text="Exit" onAction="#onClickExit"/>
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Details">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Rounds" />
-                  <MenuItem mnemonicParsing="false" text="Solution" />
+                  <MenuItem mnemonicParsing="false" text="Rounds" onAction="#onClickResults"/>
+                  <MenuItem mnemonicParsing="false" text="Solution" onAction="#onClickSolve"/>
                </items>
         </Menu>
           <Menu fx:id="scenarioThingy" disable="true" mnemonicParsing="false" text="No scenario loaded.">

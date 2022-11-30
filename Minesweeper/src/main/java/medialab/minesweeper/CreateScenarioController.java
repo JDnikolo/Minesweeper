@@ -4,10 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -65,6 +62,7 @@ public class CreateScenarioController {
         }
         difficulty = diffButton1.isSelected() ? 1:2;
         String scenarioName = new String(nameField.getText());
+        if (!scenarioName.endsWith(".txt")) scenarioName+=".txt";
         boolean uber=false;
         switch (difficulty){
             case 1: {
@@ -95,18 +93,26 @@ public class CreateScenarioController {
             nameField.setStyle(errorStyle);
             failed=true;
         }
+        Alert result;
         if (failed){
-            return;
+            result = new Alert(Alert.AlertType.ERROR, "~", ButtonType.OK);
+            result.setTitle("Invalid Scenario!");
+            result.setContentText("Your scenario parameters are invalid!");
+            result.showAndWait();
         }else{
             try{
 
                 //this WILL overwrite a file if it already exists, maybe inform user?
-                FileWriter outputFile =new FileWriter("medialab\\"+scenarioName+".txt");
+                FileWriter outputFile =new FileWriter("medialab\\"+scenarioName);
                 System.out.println(""+difficulty+" "+mines+" "+seconds+" "+uber);
                 scenario outputScenario = new scenario((byte) difficulty,mines,seconds,uber);
                 System.out.println(outputScenario.toFileFormat());
                 outputFile.write(outputScenario.toFileFormat());
                 outputFile.close();
+                result = new Alert(Alert.AlertType.NONE, "~", ButtonType.OK);
+                result.setTitle("Scenario created!");
+                result.setContentText("Your scenario was created successfully!");
+                result.showAndWait();
             }
             catch (IOException e){
                 e.printStackTrace();

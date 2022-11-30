@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -21,7 +22,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import medialab.minesweeper.gameLogic.Game;
 import medialab.minesweeper.gameLogic.scenario;
-import java.io.IOException;
+
+import java.io.*;
 
 public class MainPageController {
     private StackPane[][] panes;
@@ -33,14 +35,44 @@ public class MainPageController {
     private Timeline time;
     @FXML
     private Menu scenarioThingy;
-    private Game game;
+    private Game game = null;
 
     @FXML
     public void setScenario(String name){
        scenarioThingy.setText(name);
     }
     @FXML
-    protected void onCreateClick() throws IOException {
+    protected void onClickSolve(){
+        if (game==null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No active game to solve!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
+        if (!game.getStatus().equals("running")){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "The game is already over!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
+        game.endGame();
+        refreshField(loadedScenario.diff==1?9:16);
+        handleEnd(false);
+    }
+    @FXML
+    protected void onClickResults() throws IOException{
+        Stage scenarioStage = new Stage();
+        Parent root = FXMLLoader.load(MinesweeperApp.class.getResource("results.fxml"));
+        Scene scene = new Scene(root);
+        scenarioStage.setTitle("Last 5 games:");
+        scenarioStage.setScene(scene);
+        scenarioStage.showAndWait();
+    }
+    @FXML
+    protected void onClickExit(){
+        Stage stage = (Stage) timeDisplay.getScene().getWindow();
+        stage.close();
+    }
+    @FXML
+    protected void onClickCreate() throws IOException {
         Stage scenarioStage = new Stage();
         FXMLLoader loader = new FXMLLoader(MinesweeperApp.class.getResource("scenarioCreation.fxml"));
         Scene scene = new Scene(loader.load(),320,320);
@@ -49,7 +81,7 @@ public class MainPageController {
         scenarioStage.showAndWait();
     }
     @FXML
-    protected void onLoadClick() throws IOException {
+    protected void onClickLoad() throws IOException {
         Stage scenarioStage = new Stage();
         FXMLLoader loader = new FXMLLoader(MinesweeperApp.class.getResource("scenarioLoad.fxml"));
         Scene scene = new Scene(loader.load(),320,320);
@@ -95,6 +127,7 @@ public class MainPageController {
         mineDisplay.setText(Integer.toString(game.flagsLeft));
         flagDisplay.setText(Integer.toString(game.flagsLeft));
         timeDisplay.setText((Integer.toString(game.timeLeft)));
+        timeDisplay.setFill(Paint.valueOf("black"));
         game.start();
         configTimeline();
     }
@@ -107,7 +140,9 @@ public class MainPageController {
                         actionEvent -> {
                             int current = Integer.parseInt(timeDisplay.getText())-1;
                             if (current<0){
-                                handleEnd();
+                                game.endGame();
+                                handleEnd(true);
+                                timeDisplay.setFill(Paint.valueOf("red"));
                                 time.stop();
                             }else{
                                 timeDisplay.setText(Integer.toString(current));
@@ -115,22 +150,72 @@ public class MainPageController {
                         }));
         time.playFromStart();
     }
-    private void handleEnd(){
+    private void handleEnd(boolean defeat){
         Alert end;
         time.stop();
+        StringBuilder newEntry = new StringBuilder();
+        newEntry.append(loadedScenario.mines).append(", ");
+        newEntry.append(game.getTries()).append(", ");
+        newEntry.append(game.getTotalTime()).append(", ");
         String status = game.getStatus();
         if (status.equals("loss") || status.equals("running")){
-            //TODO handle loss
-            end = new Alert(Alert.AlertType.NONE, "Oh no!", ButtonType.OK);
-            end.setTitle("Oh no!");
-            end.setContentText("You lost! Better luck next time...");
+            if (defeat){
+                end = new Alert(Alert.AlertType.NONE, "Oh no!", ButtonType.OK);
+                end.setTitle("Oh no!");
+                end.setContentText("You lost! Better luck next time...");
+            } else {
+                end = new Alert(Alert.AlertType.NONE, "Oh no!", ButtonType.OK);
+                end.setTitle("Here's the solution!");
+                end.setContentText("You can figure it out next time.");
+            }
+            newEntry.append("CPU");
         }else{
-            //TODO handle win
             end = new Alert(Alert.AlertType.NONE, "Congratulations!", ButtonType.OK);
             end.setTitle("Congratulations!");
             end.setContentText("You won!");
+            newEntry.append("Player");
         }
         end.show();
+        writeResults(newEntry.toString());
+    }
+    protected void writeResults(String entry){
+        FileWriter fw = null;
+        FileReader fr = null;
+        BufferedReader buffer = null;
+        File temp = new File("medialab\\tempscores.txt");
+        File scores = new File("medialab\\scores.txt");
+        try {
+            if (temp.exists()){
+                temp.delete();
+            }
+            temp.createNewFile();
+            if (!scores.exists()){
+                scores.createNewFile();
+            }
+            fw = new FileWriter(temp, false);
+            fr = new FileReader(scores);
+            buffer = new BufferedReader(fr);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            fw.write(entry+'\n');
+            String line;
+            int lines=0;
+            while ((line = buffer.readLine()) != null) {
+                if (lines<4){
+                    fw.write(line+'\n');
+                }
+                lines+=1;
+            }
+            buffer.close();
+            fw.close();
+            fr.close();
+            scores.delete();
+            temp.renameTo(scores);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void squareClick(MouseEvent click, int x, int y, int size) {
@@ -147,7 +232,7 @@ public class MainPageController {
             refreshField(size);
             status = game.getStatus();
             if (!status.equals("running") && time.getStatus()==Animation.Status.RUNNING){
-                handleEnd();
+                handleEnd(true);
             }
         }
     }

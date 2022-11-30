@@ -13,10 +13,24 @@ public class Game {
     public Board gameBoard;
     public int timeLeft;    //todo create getters instead?
     public int flagsLeft;
-    int tries;
+    private int tries;
     Instant gameStartTime,gameEndTime;
     private boolean hasEnded;
     private boolean wasWon;
+
+    public int getTotalTime(){
+        return ((int)Duration.between(gameStartTime,gameEndTime).toSeconds());
+    }
+
+    public int getTries(){
+        return tries;
+    }
+
+    public void endGame(){
+        hasEnded=true;
+        gameEndTime=Instant.now();
+        gameBoard.endgameReveal();
+    }
 
     public String getStatus(){
         if (hasEnded){
@@ -102,7 +116,7 @@ public class Game {
         }
         Game g=new Game(sc);
         g.start();
-        System.out.println(g.gameBoard.printMines());
+        //System.out.println(g.gameBoard.printMines());
         g.reveal(1,1);
         g.reveal(5,5);
         System.out.println(g.gameBoard.printBoard());
@@ -131,6 +145,7 @@ class Board{
     int revealedTiles;
     final int totalTiles;
     Mine[] mines;
+    Mine uber=null;
     int flagsPlaced;
 
     public Board(scenario script){
@@ -154,7 +169,8 @@ class Board{
         if (script.uber){
             int pick=new Random().nextInt(0, mines.length);
             mines[pick].makeUber();
-            System.out.println(mines[pick].x+" "+mines[pick].y);
+            uber=mines[pick];
+            System.out.println(uber.x+" "+uber.y);
         }
     }
 
@@ -173,16 +189,16 @@ class Board{
         if (x<0 || x>boardSize-1) return true;
         if (y<0 || y>boardSize-1) return true;
         //System.out.println("Revealing: "+x+" "+y);
+        if (revealedBoard[x][y]!='\u0000'){
+            //System.out.println("Already revealed,moving on");
+            return true;
+        }
         if (mineBoard[x][y]==1) {
             if (!safe){
                 //System.out.println("BOOM!");
                 revealedBoard[x][y]='T';
             }
             return false;
-        }
-        if (revealedBoard[x][y]!='\u0000'){
-            //System.out.println("Already revealed,moving on");
-            return true;
         }
         int nearMines=0;
         for (int i=x-1;i<x+2;i++) {
@@ -219,21 +235,23 @@ class Board{
             return;
         }
         if (revealedBoard[x][y]!='\u0000' || removeOnly) return; //nothing to do
-        revealedBoard[x][y]='F';
+        System.out.println("Flag put!");
+        //revealedBoard[x][y]='F';
         flagsPlaced+=1;
-        if (mineBoard[x][y]==1){
-            for (Mine m:mines){
-                if(x==m.x && y==m.x && m.isUber && tries<=4){
-                    for (int i=0;i<x;i++) {
-                        uberReveal(i, y);
-                        uberReveal(x, i);
-                    }
+        if (uber!=null) {
+            if (x == uber.x && y == uber.y && tries <= 4) {
+                //System.out.println("Uber reveal!");
+                flagsPlaced-=1;
+                revealedBoard[x][y] = 'U';
+                for (int i = 0; i < boardSize; i++) {
+                    uberReveal(i, y);
+                    uberReveal(x, i);
                 }
             }
         }
     }
     private void uberReveal(int x, int y) {
-        if (mineBoard[x][y]==1){
+        if (mineBoard[x][y]==1 && revealedBoard[x][y]!='U'){
             revealedBoard[x][y]='N'; //neutralized mine
             return;
         }
