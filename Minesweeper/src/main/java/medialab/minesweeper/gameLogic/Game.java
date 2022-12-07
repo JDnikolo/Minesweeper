@@ -18,28 +18,6 @@ public class Game {
     private boolean hasEnded;
     private boolean wasWon;
 
-    public int getTotalTime(){
-        return ((int)Duration.between(gameStartTime,gameEndTime).toSeconds());
-    }
-
-    public int getTries(){
-        return tries;
-    }
-
-    public void endGame(){
-        hasEnded=true;
-        gameEndTime=Instant.now();
-        gameBoard.endgameReveal();
-    }
-
-    public String getStatus(){
-        if (hasEnded){
-            if (wasWon) return "win";
-            else return "loss";
-        }
-        else return "running";
-    }
-
     public Game(scenario sc){
         script=new scenario(sc);
         flagsLeft=script.mines;
@@ -133,7 +111,27 @@ public class Game {
             System.out.println(g.gameBoard.printBoard());
         }
     }
+    public int getTotalTime(){
+        return ((int)Duration.between(gameStartTime,gameEndTime).toSeconds());
+    }
 
+    public int getTries(){
+        return tries;
+    }
+
+    public void endGame(){
+        hasEnded=true;
+        gameEndTime=Instant.now();
+        gameBoard.endgameReveal();
+    }
+
+    public String getStatus(){
+        if (hasEnded){
+            if (wasWon) return "win";
+            else return "loss";
+        }
+        else return "running";
+    }
     public char getBoardChar(int x, int y) {
         return gameBoard.revealedBoard[x][y];
     }
