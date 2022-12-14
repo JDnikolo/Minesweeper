@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,7 +33,7 @@ public class MainPageController {
     @FXML
     private Text timeDisplay,flagDisplay,mineDisplay;
     private scenario loadedScenario;
-    private Timeline time;
+    private Timeline time=null;
     @FXML
     private Menu scenarioThingy;
     private Game game = null;
@@ -107,7 +108,6 @@ public class MainPageController {
         field.setAlignment(Pos.CENTER);
         for (int i=0;i<size;i++){
             for (int j=0;j<size;j++){
-                //todo configure rectangles to reveal/flag
                 int finalI = i;
                 int finalJ = j;
                 StackPane R = new StackPane();
@@ -133,21 +133,23 @@ public class MainPageController {
     }
 
     private void configTimeline() {
-        time = new Timeline();
-        time.setCycleCount(Timeline.INDEFINITE);
-        time.getKeyFrames().add(
-                new KeyFrame(Duration.seconds(1),
-                        actionEvent -> {
-                            int current = Integer.parseInt(timeDisplay.getText())-1;
-                            if (current<0){
-                                game.endGame();
-                                handleEnd(true);
-                                timeDisplay.setFill(Paint.valueOf("red"));
-                                time.stop();
-                            }else{
-                                timeDisplay.setText(Integer.toString(current));
-                            }
-                        }));
+        if (time==null){
+            time = new Timeline();
+            time.setCycleCount(Timeline.INDEFINITE);
+            time.getKeyFrames().add(
+                    new KeyFrame(Duration.seconds(1),
+                            actionEvent -> {
+                                int current = Integer.parseInt(timeDisplay.getText())-1;
+                                if (current<0){
+                                    time.stop();
+                                    game.endGame();
+                                    handleEnd(true);
+                                    timeDisplay.setFill(Paint.valueOf("red"));
+                                }else{
+                                    timeDisplay.setText(Integer.toString(current));
+                                }
+                            }));
+        }
         time.playFromStart();
     }
     private void handleEnd(boolean defeat){
@@ -227,8 +229,8 @@ public class MainPageController {
             } else {
                 //System.out.println("Flagging " + x + " " + y);
                 game.flag(x, y);
-                flagDisplay.setText(Integer.toString(game.flagsLeft));
             }
+            flagDisplay.setText(Integer.toString(game.flagsLeft));
             refreshField(size);
             status = game.getStatus();
             if (!status.equals("running") && time.getStatus()==Animation.Status.RUNNING){
@@ -243,12 +245,18 @@ public class MainPageController {
                 char toPut = game.getBoardChar(i,j);
                 if (toPut=='M' || toPut=='T'){
                     content.setFill(Paint.valueOf("red"));
+                    content.setFont(Font.font("Verdana",20));
                 }
                 if (toPut=='F' ){
                     content.setFill(Paint.valueOf("blue"));
+                    content.setFont(Font.font("Verdana",20));
                 }
                 if (toPut!='E'){
                     content.setText(""+toPut);
+                    content.setFill(Paint.valueOf("black"));
+                    content.setFont(Font.font("Verdana",15));
+                } else{
+                    content.setText("");
                 }
                 if (toPut!='\u0000'&& toPut!='F'&& toPut!='M'){
                     panes[i][j].setBackground(new Background(new BackgroundFill(Color.valueOf("white"), CornerRadii.EMPTY, Insets.EMPTY)));
