@@ -11,7 +11,7 @@ import java.util.*;
 public class Game {
     static public scenario script;
     public Board gameBoard;
-    public int timeLeft;    //todo create getters instead?
+    public int timeLeft;
     public int flagsLeft;
     private int tries;
     Instant gameStartTime,gameEndTime;
@@ -67,9 +67,7 @@ public class Game {
     public void flag(int x, int y){
         boolean removeOnly;
         flagsLeft= gameBoard.mines.length-gameBoard.flagsPlaced;
-        if (flagsLeft>0){
-            removeOnly=false;
-        } else removeOnly=true;
+        removeOnly= flagsLeft <= 0;
         gameBoard.flag(x,y,this.tries,removeOnly);
         flagsLeft= gameBoard.mines.length-gameBoard.flagsPlaced;
 
@@ -187,7 +185,7 @@ class Board{
         if (x<0 || x>boardSize-1) return true;
         if (y<0 || y>boardSize-1) return true;
         //System.out.println("Revealing: "+x+" "+y);
-        if (revealedBoard[x][y]!='\u0000'){
+        if (revealedBoard[x][y]!='\u0000' && revealedBoard[x][y]!='F'){
             //System.out.println("Already revealed,moving on");
             return true;
         }
@@ -208,6 +206,7 @@ class Board{
                 }
             }
         }
+        if (revealedBoard[x][y]=='F') flagsPlaced-=1;
         if (nearMines==0) {
             revealedBoard[x][y]='E';
             for (int i = x - 1; i < x + 2; i++) {
@@ -233,8 +232,8 @@ class Board{
             return;
         }
         if (revealedBoard[x][y]!='\u0000' || removeOnly) return; //nothing to do
-        System.out.println("Flag put!");
-        //revealedBoard[x][y]='F';
+        //System.out.println("Flag put!");
+        revealedBoard[x][y]='F';
         flagsPlaced+=1;
         if (uber!=null) {
             if (x == uber.x && y == uber.y && tries <= 4) {
