@@ -243,18 +243,26 @@ public class MainPageController {
             for (int j=0;j<size;j++){
                 Text content = (Text)panes[i][j].getChildren().get(0);
                 char toPut = game.getBoardChar(i,j);
-                if (toPut=='M' || toPut=='T'){
-                    content.setFill(Paint.valueOf("red"));
-                    content.setFont(Font.font("Verdana",20));
-                }
-                if (toPut=='F' ){
-                    content.setFill(Paint.valueOf("blue"));
-                    content.setFont(Font.font("Verdana",20));
+                switch (toPut){
+                    case 'M':
+                    case 'T': {
+                        content.setFill(Paint.valueOf("red"));
+                        content.setFont(Font.font("Verdana",20));
+                        break;
+                    }
+                    case 'F':{
+                        content.setFill(Paint.valueOf("blue"));
+                        content.setFont(Font.font("Verdana",20));
+                        break;
+                    }
+                    default:{
+                        content.setFill(Paint.valueOf("black"));
+                        content.setFont(Font.font("Verdana",15));
+                        break;
+                    }
                 }
                 if (toPut!='E'){
                     content.setText(""+toPut);
-                    content.setFill(Paint.valueOf("black"));
-                    content.setFont(Font.font("Verdana",15));
                 } else{
                     content.setText("");
                 }

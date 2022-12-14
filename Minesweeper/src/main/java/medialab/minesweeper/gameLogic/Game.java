@@ -185,6 +185,7 @@ class Board{
         if (x<0 || x>boardSize-1) return true;
         if (y<0 || y>boardSize-1) return true;
         //System.out.println("Revealing: "+x+" "+y);
+        if (!safe && revealedBoard[x][y]=='F') return true; //no revealing flagged tiles on user click
         if (revealedBoard[x][y]!='\u0000' && revealedBoard[x][y]!='F'){
             //System.out.println("Already revealed,moving on");
             return true;
