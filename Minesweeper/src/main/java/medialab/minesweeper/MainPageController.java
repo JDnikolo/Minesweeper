@@ -245,8 +245,20 @@ public class MainPageController {
                 char toPut = game.getBoardChar(i,j);
                 switch (toPut){
                     case 'M':
+                        content.setFill(Paint.valueOf("brown"));
+                        content.setFont(Font.font("Verdana",20));
+                        break;
                     case 'T': {
                         content.setFill(Paint.valueOf("red"));
+                        content.setFont(Font.font("Verdana",20));
+                        break;
+                    }
+                    case 'U':
+                        content.setFill(Paint.valueOf("green"));
+                        content.setFont(Font.font("Verdana",20));
+                        break;
+                    case 'N': {
+                        content.setFill(Paint.valueOf("brown"));
                         content.setFont(Font.font("Verdana",20));
                         break;
                     }

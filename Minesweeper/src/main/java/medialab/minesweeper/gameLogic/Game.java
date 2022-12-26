@@ -175,7 +175,7 @@ class Board{
         for (Mine m :mines){
             x=m.x;
             y=m.y;
-            if (revealedBoard[x][y]!='T'&& revealedBoard[x][y]!='F'){
+            if (revealedBoard[x][y]!='T'&& revealedBoard[x][y]!='F' && revealedBoard[x][y]!='N'){
                 revealedBoard[x][y]='M';
             }
         }
@@ -251,7 +251,7 @@ class Board{
     private void uberReveal(int x, int y) {
         if (mineBoard[x][y]==1 && revealedBoard[x][y]!='U'){
             revealedBoard[x][y]='N'; //neutralized mine
-            return;
+            return; //no need to increase revealed tiles here
         }
         if (revealedBoard[x][y]=='\u0000'){
             int nearMines=0;
